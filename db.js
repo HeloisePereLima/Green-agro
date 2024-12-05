@@ -1,6 +1,7 @@
-require('dotenv').config();
+
 const { Pool } = require('pg')
 
+console.log(process.env.DATABASE_URL);
 
 
 const BD = new Pool ({
