@@ -1,0 +1,125 @@
+<%- include('../includes/header.ejs', { titulo : 'Dashboard'}) %>
+
+<main>
+    
+    <br>
+    <br>
+    <h3 class="d-flex p-3 ">Painel Administrativo</h3>
+
+   <div class="d-flex flex-wrap justify-content-center gap-5 h-50">
+       <div class="card " style="width: 18rem;">
+        <img src="https://i.pinimg.com/564x/0e/68/5d/0e685db8a68d8b2665121809e1cdf84f.jpg" class="card-img-top  w-70 h-70 " alt="...">
+        <div class="card-body">
+          <h5 class="card-title">Categorias</h5>
+          <p class="card-text">Veja e edite cada categoria dos produtos.</p>
+          <a href="/categorias/" class="btn btn-outline-success">Saiba mais.</a>
+        </div>
+      </div>
+       <div class="card" style="width: 18rem;">
+        <img src="https://i.pinimg.com/564x/d7/cb/67/d7cb672f33eb29707b28b46cd07d994b.jpg" class="card-img-top w-70 h-70" alt="...">
+        <div class="card-body">
+          <h5 class="card-title">Produtos</h5>
+          <p class="card-text">Veja e edite cada produto disponível.</p>
+          <a href="/produtos/" class="btn btn-outline-success">Saiba mais.</a>
+        </div>
+      </div>
+      <div class="card" style="width: 18rem;">
+        <img src="https://i.pinimg.com/564x/02/10/35/021035f9c25bd20be6339b2bda52dd73.jpg" class="card-img-top  w-70 h-70" alt="...">
+        <div class="card-body">
+          <h5 class="card-title">Usuarios</h5>
+          <p class="card-text">Veja e edite cada usuário disponível.</p>
+          <a href="/usuarios/" class="btn btn-outline-success">Saiba mais.</a>
+        </div>
+      </div> 
+    </div>
+  </section>
+
+  
+</main>
+
+<!-- Seção dos Gráficos -->
+<section class="row m-5 text-center">
+  <!-- Total Produtos -->
+  <div class="col-md-4">
+    <div class="card shadow-sm">
+      <div class="card-header bg-success text-white">
+        Total de Produtos
+       </div>
+       <div class="card-body">
+        <%= totalProdutos %>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="card shadow-sm">
+      <div class="card-header bg-success text-white">
+        Total de Categorias
+       </div>
+       <div class="card-body">
+        <%= totalCategorias %>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="card shadow-sm">
+      <div class="card-header bg-success text-white">
+        Total de Usuários
+       </div>
+       <div class="card-body">
+        <%= totalUsuarios %>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="d-flex justify-content-center">
+  <div class="m-5 col-md-6 py-3 mb-4 text-center">
+    <div class="card shadow-sm">
+      <div class="card-header bg-success text-white">
+        Grafico de Estoque
+       </div>
+       <div class="card-body ">
+         <canvas id="graficoEstoque"></canvas>
+      </div>
+    </div>
+  </div>
+
+
+</section>
+
+
+<script>
+    //Recebendo o vetor mediaDisciplinas com o resultado da consulta do Banco de Dados
+    const dados_produtos_estoque = <%- JSON.stringify(produtosEstoque)%>
+
+    const etiquetas = dados_produtos_estoque.map(x => x.nome_produto)
+    const valores = dados_produtos_estoque.map(x => x.estoque)
+
+    // Bar Chart - Média de Notas por Disciplina
+    const barCtx = document.getElementById('graficoEstoque').getContext('2d');
+    new Chart(barCtx, {
+        type: 'bar',
+        data: {
+            labels: etiquetas,
+            datasets: [{
+                label:'Gráfico de Estoque',
+                data: valores,
+                backgroundColor: ['#007bff', '#28a745', '#ffc107', '#dc3545', '#6f42c1']
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: true },
+                tooltip: { enabled: true }
+            }
+        }
+    });
+
+</script>
+
+
+
+    <%- include('../includes/footer.ejs') %>

@@ -1,0 +1,78 @@
+<%- include('../includes/header.ejs', {titulo : 'Green Agro'}) %>
+<head> 
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<main>
+    <h2>Lista dos produtos</h2>
+    <a href="/produtos/novo" class="btn btn-success"> + Adicionar produto </a>
+
+
+    <form action="/produtos/" method="get" class="form form-consulta">
+        <input type="text" name="busca" 
+        value="<%= busca %>" 
+        placeholder="Buscar produtos" />
+        <button type="submit" class="btn btn-success"> Buscar </button>
+        <select name="ordenar" onchange="this.form.submit()">
+            <option value="nome_produto" 
+            <%= ordenar == 'nome_produto' ? 'selected' : '' %> > Ordenar por Produto</option>
+        </select>
+    </form>
+
+    <table class="dados-table">
+        <thead>
+            <tr>
+                <th>Foto</th>
+                <th>Nome</th>
+                <th>Estoque </th>
+                <th>Estoque Minímo</th>
+                <th>Valor</th>
+                <th>Ações</th>
+            </tr>
+    
+        <tbody>
+        <% for (let produto of produtos) { %>
+            <tr>
+                <td><img src=" <%= produto.foto %> " alt="" class="foto"></td>
+            <td>
+            <%= produto.nome_produto %> 
+            </td>
+            <td>
+            <%= produto.estoque %> 
+            </td>
+            <td>
+            <%= produto.estoque_minimo %> 
+            </td>
+            <td>
+            <%= produto.valor %> 
+            </td>
+            <td>
+                <a href="/produtos/<%=produto.id_produto %>/editar" class="btn btn-edit"> Editar </a> |
+                <form action="/produtos/<%=produto.id_produto %>/deletar" method="post">
+                    <button type="submit" class="btn btn-warning" onclick="confirm('Deseja excluir ?')">Excluir</button>
+                </form>
+            </td>
+            </tr>
+
+           
+         <% } %>
+        </tbody>
+        </thead>
+    </table>
+        
+    <div class="pagination">
+        <% if (pgAtual > 1) { %>
+        <a href="/produtos?pg=<%= pgAtual-1 %>">Anterior</a>
+
+        <% } %>
+
+        <span>Página <%= pgAtual %> de <%= totalPgs %></span>
+
+        <% if(pgAtual < totalPgs) { %>
+            <a href="/produtos?pg=<%= pgAtual+1 %>">Próximo</a>
+    
+            <% } %>
+    </div>
+</main>
+
+<%- include('../includes/footer.ejs') %>

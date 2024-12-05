@@ -1,0 +1,34 @@
+<%- include('../includes/header.ejs', {titulo : 'Green Agro'}) %>
+
+<head>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<main>
+    <h2>Editando categoria</h2>
+    <form action="/categorias/<%=categorias.id_categorias %>/editar" method="POST" class="form"> 
+        <div class="form-group">
+            <label for="nome_categorias">Nome da categoria</label>
+            <input type="text" id="nome_categorias" name="nome_categorias" value="<%= categorias.nome_categorias %>" required> 
+        </div>
+
+
+        <button type="submit" class="btn btn-success">Salvar Alterações </button>
+        <a href="/categorias/" class="btn btn-secondary">Cancelar</a>
+
+        <% if (typeof mensagem != 'undefined') {%>
+            <p class="erro"> <%= mensagem %></p>
+        <% }%>
+        
+    </form>
+    
+</main>
+
+
+
+
+
+
+
+
+<%- include('../includes/footer.ejs') %>

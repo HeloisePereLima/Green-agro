@@ -1,0 +1,74 @@
+<%- include('../includes/header.ejs', {titulo : 'Green Agro'}) %>
+<head>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<main>
+  <h2>Usuários</h2>
+
+  <a href="/usuarios/novo" class="btn btn-primary"> + Adicionar usuário</a>
+
+  <% if (typeof mensagem != 'undefined'){ %>
+    <p class="erro"> <%= mensagem %></p>
+  <% } %>
+
+  <form action="/usuarios/" method="get" class="form form-consulta">
+    <input type="text" name="busca" 
+    value="<%= busca %>"
+    placeholder="Buscar usuário" />
+    <button type="submit" class="btn btn-success"> Buscar </button>
+    <select name="ordenar" onchange="this.form.submit()">
+        <option value="nome" 
+        <%= ordenar == 'nome' ? 'selected' : '' %> > Ordenar por nome</option>
+        <option value="usuario" 
+        <%= ordenar == 'usuario' ? 'selected' : '' %> > Ordenar por usuários</option>
+    </select>
+</form>
+
+
+  <table class="dados-table">
+    <thead>
+      <tr>
+        <th>Foto</th>
+        <th>Nome</th>
+        <th>Usuário</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% for (let usuario of usuarios) { %>
+        <tr>
+          <td><img src=" <%= usuario.foto %> " alt="" class="foto"></td>
+        <td><%= usuario.nome %></td>
+        <td><%= usuario.usuario %></td>
+          
+        <td> 
+            <a href="/usuarios/ <%= usuario.id_usuario %>/editar" class="btn btn-edit"> Editar</a>
+          <form action="/usuarios/ <%= usuario.id_usuario %>/deletar" method="POST">
+              <button type="submit" class="btn btn-warning" onclick="confirm('Deseja excluir ?')">Excluir</button>
+          </form>
+        </td>
+      </tr>
+      <% } %>
+    
+  </table>
+  </tbody>
+
+  <div class="pagination">
+    <% if (pgAtual > 1) { %>
+    <a href="/usuarios?pg=<%= pgAtual -1 %>">Anterior</a>
+
+    <% } %>
+
+    <span>Página <%= pgAtual %> de <%= totalPgs %></span>
+
+    <% if(pgAtual < totalPgs) { %>
+        <a href="/usuarios?pg=<%= pgAtual+1 %>">Anterior</a>
+
+        <% } %>
+</div>
+
+</main>
+
+<%- include('../includes/footer.ejs') %>

@@ -1,0 +1,72 @@
+<%- include('../includes/header.ejs', {titulo : 'Green Agro'}) %>
+<head>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<main>
+    <h2>Lista das categorias</h2>
+    <a href="/categorias/novo" class="btn btn-success"> + Adicionar categorias </a>
+
+    <% if (typeof mensagem != 'undefined') { %>
+        <p class="erro"> <%= mensagem %></p>
+
+    <% } %>
+
+    <form action="/categorias/" method="get" class="form form-consulta">
+        <input type="text" name="busca" 
+        value="<%= busca %>"
+        placeholder="Buscar categoria" />
+        <button type="submit" class="btn btn-success"> Buscar </button>
+        <select name="ordenar" onchange="this.form.submit()">
+            <option value="nome_categorias" 
+            <%= ordenar == 'nome_categorias' ? 'selected' : '' %> > Ordenar por categoria</option>
+        </select>
+    </form>
+
+    <table class="dados-table">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Ação</th>
+            </tr>
+    
+    <tbody>
+        <% for (let categoria of categorias) { %>
+            <tr>
+            <td>
+            <%=categoria.nome_categorias %> 
+            </td>
+            <td>
+                <a href="/categorias/<%=categoria.id_categorias %>/editar" class="btn btn-edit"> Editar </a> |
+                <form action="/categorias/<%=categoria.id_categorias %>/deletar" method="post">
+                    <button type="submit" class="btn btn-warning" onclick="confirm('Deseja excluir ?')">Excluir</button>
+                </form>
+            </td>
+            </tr>
+         <% } %>
+    </table>
+
+    </tbody>
+
+    <div class="pagination">
+        <% if (pgAtual > 1) { %>
+        <a href="/categorias?pg=<%= pgAtual-1 %>">Anterior</a>
+
+        <% } %>
+
+        <span>Página <%= pgAtual %> de <%= totalPgs %></span>
+
+        <% if(pgAtual < totalPgs) { %>
+            <a href="/categorias?pg=<%= pgAtual+1 %>">Anterior</a>
+    
+            <% } %>
+    </div>
+
+</main>
+
+
+
+
+
+
+<%- include('../includes/footer.ejs') %>

@@ -1,0 +1,35 @@
+<%- include('../includes/header.ejs', {titulo : 'Green Agro'}) %>
+
+<head>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<main>
+    <h2>Editando Usuários</h2>
+    <form action="/usuarios/<%= usuarios.id_usuario %>/editar" method="POST" class="form">
+
+        
+        <div class="form-group foto">
+            <label for="foto">foto</label>
+            <input type="text" id="foto" name="foto" required>
+        </div>
+
+        <div class="form-group">
+            <label for="nome">Nome do usuário:</label>
+            <input type="text" id="nome" name="nome" value="<%= usuarios.nome %>" required>
+        </div>
+        <div class="form-group">
+            <label for="usuario">Usuário:</label>
+            <input type="text" id="usuario" name="usuario" value="<%= usuarios.usuario %>" required> 
+        </div>
+        
+        <button type="submit" class="btn btn-success"> Salvar Alterações </button>
+        <a href="/usuarios" class="btn btn-secondary"> Cancelar </a>
+
+        <% if (typeof mensagem != 'undefined'){ %>
+            <p class="erro" > <% mensagem %> </p>
+        <%} %>
+
+    </form>
+</main>
+<%- include('../includes/footer.ejs') %>
