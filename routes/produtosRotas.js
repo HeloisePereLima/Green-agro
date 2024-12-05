@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const BD = require("../db");
+const { put, del } = require("@vercel/blob");
 
 router.get("/", async (req, res) => {
   const busca = req.query.busca || "";
@@ -40,6 +41,9 @@ router.get("/", async (req, res) => {
     pgAtual: parseInt(pg),
     totalPgs: totalPgs,
   });
+
+
+
 });
 
 router.get("/novo", async (req, res) => {
@@ -63,11 +67,12 @@ router.post("/novo", async (req, res) => {
     const estoque = req.body.estoque;
     const estoque_minimo = req.body.estoque_minimo;
     const valor = req.body.valor;
-    const foto = req.body.foto;
+
+    const urlImagem = await enviarFoto(req.files.file);
 
     await BD.query(
       "insert into produtos (nome_produto, id_categorias, estoque, estoque_minimo, valor, foto) values ($1, $2, $3, $4, $5, $6)",
-      [nome_produto, id_categorias, estoque, estoque_minimo, valor, foto]
+      [nome_produto, id_categorias, estoque, estoque_minimo, valor, urlImagem]
     );
 
     //Redirecionando para tela de consulta de disciplinas
@@ -80,6 +85,7 @@ router.post("/novo", async (req, res) => {
 
 router.post("/:id/deletar", async (req, res) => {
   const { id } = req.params;
+  await BD.query("delete from movimentacoes where id_produto = $1", [id]);
   await BD.query("delete from produtos where id_produto = $1", [id]);
   res.redirect("/produtos");
 });
@@ -92,7 +98,7 @@ router.get("/:id/editar", async (req, res) => {
   );
   const movimentacoes = await BD.query(`select *,TO_CHAR(data_movimentacao, 'DD/MM/YYYY') as data from movimentacoes where id_produto = $1`, [id])
 
-  console.log('mov', movimentacoes);
+  console.log('mov', movimentacoes);                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
   
   
   res.render("produtosTelas/editar", { produtos: resultado.rows[0], movimentacoes : movimentacoes.rows });
@@ -104,9 +110,17 @@ router.post("/:id/editar", async (req, res) => {
   const { estoque } = req.body;
   const { estoque_minimo } = req.body;
   const { valor } = req.body;
+  const { foto } = req.body;
+
+  let urlImagem = foto
+  if (req.files){
+    excluirFoto(urlImagem)
+    urlImagem = await enviarFoto(req.files.file)
+  }
+
   await BD.query(
-    "update produtos set nome_produto= $1 where id_produto = $2 estoque = $3 estoque_minimo = $4 valor = $5 ",
-    [nome_produto, id, estoque, estoque_minimo, valor]
+    "update produtos set nome_produto= $1, estoque = $2, estoque_minimo = $3, valor = $4 where id_produto = $5 ",
+    [nome_produto, estoque, estoque_minimo, valor, urlImagem, id]
   );
   res.redirect("/produtos");
 });
@@ -145,5 +159,23 @@ router.post("/:id/lancar-movimentacao", async (req, res) => {
     res.render("produtosTelas/criar", { mensagem: erro });
   }
 });
+
+const enviarFoto = async (file) => {
+  const fileBuffer = file.data
+  const originalName = file.name
+  const blob = await put(originalName, fileBuffer, {
+      access: "public", // Define acesso público ao arquivo
+  });
+  console.log(`Arquivo enviado com sucesso! URL: ${blob.url}`);
+  return blob.url;
+};
+
+const excluirFoto = async (imagemUrl) => {
+  const nomeArquivo = imagemUrl.split("/").pop();
+  if (nomeArquivo) {
+      await del(nomeArquivo);
+      console.log(`Arquivo ${nomeArquivo} excluído com sucesso.`);
+  }
+}
 
 module.exports = router;

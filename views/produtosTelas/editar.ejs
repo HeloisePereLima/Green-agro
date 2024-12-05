@@ -40,7 +40,7 @@
         <div class="tab-content" id="myTabContent">
             <!-- Aba para Editar o produto -->
             <div class="tab-pane fade show active p-3" id="editar">
-                <form action="/produtos/<%= produtos.id_produto %>/editar" method="POST" class="form">
+                <form action="/produtos/<%= produtos.id_produto %>/editar" method="POST" class="form" enctype="multipart/form-data">
                     <div class="form-group">
                         <label for="nome_produto">Nome do produto</label>
                         <input type="text" id="nome_produto" name="nome_produto" value="<%= produtos.nome_produto %>"
@@ -60,9 +60,10 @@
                         <input type="text" id="valor" name="valor" value="<%= produtos.valor %>" required>
                     </div>
 
-                    <div class="form-group foto">
+                    <div class="form-group ">
                         <label for="foto">foto</label>
-                        <input type="text" id="foto" name="foto" value="<%= produtos.foto %>" required>
+                        <input type="file" id="file" name="file" >
+                        <input type="hidden" id="foto" name="foto" value="<%= produtos.foto %>" required>
                     </div>
 
                     <button type="submit" class="btn btn-success"> Salvar alterações </button>

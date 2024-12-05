@@ -2,6 +2,8 @@ const express = require('express')
 const path = require('path')
 const session = require('express-session')
 require('dotenv').config();
+const fileUpload = require("express-fileupload")
+const MongoStore = require("connect-mongo");
 
 const app = express()
 
@@ -14,8 +16,9 @@ app.use(express.json());  // utilizar dados em formato JSON
 app.use(session({
     secret:'Sesisenai', //um segredo ára assinar a sessão
     resave:false, 
-    saveUninitialized: true //se não houver dados na sessão, nao salva
+    saveUninitialized: false,
 }))
+app.use(fileUpload())
 
 //Middleware para verificar se o usuario esta logado
 const verificarAutenticacao = (req, res, next) => {

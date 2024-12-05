@@ -4,7 +4,7 @@
 </head>
 <main>
     <h2>Adicionando uma novo produto </h2>
-    <form action="/produtos/novo" class="form" method="post">
+    <form action="/produtos/novo" class="form" method="post" enctype="multipart/form-data">
         <div class="form-group">
             <label for="nome_produto">Nome do Produto:</label>
             <input type="text" id="id_produto" name="nome_produto" required>
@@ -21,15 +21,15 @@
             <label for="valor">Valor:</label>
             <input type="text" id="valor" name="valor" required>
         </div>
-        <div class="form-group foto">
+        <div class="form-group">
             <label for="foto">foto</label>
-            <input type="text" id="foto" name="foto" required>
+            <input type="file" id="file" name="file" required>
         </div>
 
         <div class="form-group">
             <label for="id_categorias">Categoria:</label>
             <select id="id_categorias" name="id_categorias">
-                <% for (let categoria of categoriasCadastradas) { %>
+                <%for (let categoria of categoriasCadastradas) { %>
                     <option value="<%= categoria.id_categorias %>"><%= categoria.nome_categorias %> <%= categoria.estoque %></option>
             <% } %>
             </select>
